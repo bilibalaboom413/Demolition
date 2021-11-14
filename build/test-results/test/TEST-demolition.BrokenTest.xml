@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="demolition.BrokenTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-11-05T02:15:45" hostname="LAPTOP-G2PUCDLR" time="0.002">
+  <properties/>
+  <testcase name="testBroke()" classname="demolition.BrokenTest" time="0.0"/>
+  <testcase name="testReset()" classname="demolition.BrokenTest" time="0.0"/>
+  <testcase name="testGetBroken()" classname="demolition.BrokenTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RedEnemy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">RedEnemy.java</span></div><h1>RedEnemy.java</h1><pre class="source lang-java linenums">package demolition;
+
+import java.util.Random;
+
+public class RedEnemy extends Enemy {
+
+    private Random random;
+
+    /**
+     * Constructor of RedEnemy 
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     */
+    public RedEnemy(int x, int y) {
+<span class="fc" id="L15">        super(x, y);</span>
+<span class="fc" id="L16">        random = new Random(25);</span>
+<span class="fc" id="L17">        move = random.nextInt(4);</span>
+<span class="fc" id="L18">        initialize();</span>
+<span class="fc" id="L19">    }</span>
+
+    /**
+     * Reset the red enemy position and move direction
+     */
+    public void reset() {
+<span class="fc" id="L25">        x = initialX;</span>
+<span class="fc" id="L26">        y = initialY;</span>
+<span class="fc" id="L27">        move = random.nextInt(4);</span>
+<span class="fc" id="L28">        alive = true;</span>
+<span class="fc" id="L29">    }</span>
+    
+    /**
+     * Update the move of red enemy every second
+     */
+    public void move() {
+<span class="fc" id="L35">        timer++;</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (this.timer &gt; SECONDS_BETWEEN_MOVES * App.FPS) {</span>
+<span class="fc" id="L37">            initialize();</span>
+<span class="fc" id="L38">            checkCollision();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">            if (move == 0) {</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">                if (!canMoveUp) {</span>
+<span class="fc" id="L41">                    move = random.nextInt(4);</span>
+                } else {
+<span class="fc" id="L43">                    y -= 32;</span>
+                }
+<span class="fc bfc" id="L45" title="All 2 branches covered.">            } else if (move == 1) {</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">                if (!canMoveRight) {</span>
+<span class="fc" id="L47">                    move = random.nextInt(4);</span>
+                } else {
+<span class="fc" id="L49">                    x += 32;</span>
+                }
+<span class="fc bfc" id="L51" title="All 2 branches covered.">            } else if (move == 2) {</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">                if (!canMoveDown) {</span>
+<span class="fc" id="L53">                    move = random.nextInt(4);</span>
+                } else {
+<span class="fc" id="L55">                    y += 32;</span>
+                }
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">            } else if (move == 3) {</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">                if (!canMoveLeft) {</span>
+<span class="fc" id="L59">                    move = random.nextInt(4);</span>
+                } else {
+<span class="fc" id="L61">                    x -= 32;</span>
+                }
+            }
+<span class="fc" id="L64">            timer = 0;</span>
+        }
+<span class="fc" id="L66">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

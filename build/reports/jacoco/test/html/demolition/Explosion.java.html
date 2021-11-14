@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Explosion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">Explosion.java</span></div><h1>Explosion.java</h1><pre class="source lang-java linenums">package demolition;
+
+public class Explosion extends GameObject {
+    
+    private static int explosionTimer;
+    private static boolean isExplosion;
+
+    /**
+     * Constructor for the explosion
+     * @param x the x-coordinate of the explosion
+     * @param y the y-coordinate of the explosion
+     */
+    public Explosion(int x, int y) {
+<span class="fc" id="L14">        super(x, y);</span>
+<span class="fc" id="L15">        explosionTimer = 0;</span>
+<span class="fc" id="L16">        isExplosion = false;</span>
+<span class="fc" id="L17">    }</span>
+
+<span class="nc" id="L19">    public void tick() {}</span>
+
+    /**
+     * Remove the explosion
+     */
+    public void reset() {
+<span class="fc" id="L25">        x = -1000;</span>
+<span class="fc" id="L26">        y = -1000;</span>
+<span class="fc" id="L27">    }</span>
+
+    /**
+     * check whether the bomb is explosion 
+     * @return isExplosion
+     */
+    public static boolean getExplosion() {
+<span class="fc" id="L34">        return isExplosion;</span>
+    }
+
+    /**
+     * Check the explosion range and whether can break the wall
+     * @param bomb the bomb
+     * @param explosion the explosion list
+     * @param level the current level
+     * @param bombGuy the bombGuy
+     * @param yellowEnemy the yellowEnemy
+     * @param redEnemy the redEnemy
+     */
+    public static void explore(Bomb bomb, Explosion[] explosion, Level level, BombGuy bombGuy, YellowEnemy yellowEnemy, RedEnemy redEnemy) {
+<span class="nc" id="L47">        int x = bomb.getX();</span>
+<span class="nc" id="L48">        int y = bomb.getY();</span>
+<span class="nc" id="L49">        bomb.reset();</span>
+<span class="nc" id="L50">        bombGuy.setCanBomb(true);</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        for (int i = 0; i &lt; explosion.length; i++) {</span>
+<span class="nc" id="L52">            explosion[0].setCoordinate(x, y);</span>
+<span class="nc" id="L53">            explosion[1].setCoordinate(x, y + 64);</span>
+<span class="nc" id="L54">            explosion[2].setCoordinate(x - 64, y);</span>
+<span class="nc" id="L55">            explosion[3].setCoordinate(x + 64, y);</span>
+<span class="nc" id="L56">            explosion[4].setCoordinate(x, y - 64);</span>
+<span class="nc" id="L57">            explosion[5].setCoordinate(x + 32, y);</span>
+<span class="nc" id="L58">            explosion[6].setCoordinate(x - 32, y);</span>
+<span class="nc" id="L59">            explosion[7].setCoordinate(x, y + 32);</span>
+<span class="nc" id="L60">            explosion[8].setCoordinate(x, y - 32);</span>
+        }
+        
+<span class="nc" id="L63">        boolean hasLeft = false;</span>
+<span class="nc" id="L64">        boolean hasRight = false;</span>
+<span class="nc" id="L65">        boolean hasUp = false;</span>
+<span class="nc" id="L66">        boolean hasDown = false;</span>
+<span class="nc" id="L67">        boolean hasNext = false;</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        for (SolidWall solid : level.getSolidWall()) {</span>
+<span class="nc bnc" id="L69" title="All 4 branches missed.">            if (solid.getX() == x - 32 &amp;&amp; solid.getY() == y) {</span>
+<span class="nc" id="L70">                explosion[6].reset();</span>
+<span class="nc" id="L71">                explosion[2].reset();</span>
+<span class="nc" id="L72">                hasLeft = true;</span>
+<span class="nc bnc" id="L73" title="All 4 branches missed.">            } else if (solid.getX() == x + 32 &amp;&amp; solid.getY() == y) {</span>
+<span class="nc" id="L74">                explosion[3].reset();</span>
+<span class="nc" id="L75">                explosion[5].reset();</span>
+<span class="nc" id="L76">                hasRight = true;</span>
+<span class="nc bnc" id="L77" title="All 4 branches missed.">            } else if (solid.getX() == x &amp;&amp; solid.getY() == y - 32) {</span>
+<span class="nc" id="L78">                explosion[4].reset();</span>
+<span class="nc" id="L79">                explosion[8].reset();</span>
+<span class="nc" id="L80">                hasUp = true;</span>
+<span class="nc bnc" id="L81" title="All 4 branches missed.">            } else if (solid.getX() == x &amp;&amp; solid.getY() == y + 32) {</span>
+<span class="nc" id="L82">                explosion[1].reset();</span>
+<span class="nc" id="L83">                explosion[7].reset();</span>
+<span class="nc" id="L84">                hasDown = true;</span>
+<span class="nc bnc" id="L85" title="All 6 branches missed.">            } else if (solid.getX() == x - 64 &amp;&amp; solid.getY() == y &amp;&amp; !hasLeft) {</span>
+<span class="nc" id="L86">                explosion[2].reset();</span>
+<span class="nc bnc" id="L87" title="All 6 branches missed.">            } else if (solid.getX() == x + 64 &amp;&amp; solid.getY() == y &amp;&amp; !hasRight) {</span>
+<span class="nc" id="L88">                explosion[3].reset();</span>
+<span class="nc bnc" id="L89" title="All 6 branches missed.">            } else if (solid.getX() == x &amp;&amp; solid.getY() == y - 64 &amp;&amp; !hasUp) {</span>
+<span class="nc" id="L90">                explosion[4].reset();</span>
+<span class="nc bnc" id="L91" title="All 6 branches missed.">            } else if (solid.getX() == x &amp;&amp; solid.getY() == y + 64 &amp;&amp; !hasDown) {</span>
+<span class="nc" id="L92">                explosion[1].reset();</span>
+            }
+<span class="nc" id="L94">        }</span>
+
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        for (Broken b : level.getBroken()) {</span>
+<span class="nc bnc" id="L97" title="All 4 branches missed.">            if (b.getX() == x - 32 &amp;&amp; b.getY() == y) {</span>
+<span class="nc" id="L98">                explosion[2].reset();</span>
+<span class="nc" id="L99">                b.remove();</span>
+<span class="nc" id="L100">                b.broke();</span>
+<span class="nc" id="L101">                hasLeft = true;</span>
+<span class="nc bnc" id="L102" title="All 4 branches missed.">            } else if (b.getX() == x + 32 &amp;&amp; b.getY() == y) {</span>
+<span class="nc" id="L103">                explosion[3].reset();</span>
+<span class="nc" id="L104">                b.remove();</span>
+<span class="nc" id="L105">                b.broke();</span>
+<span class="nc" id="L106">                hasRight = true;</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">            } else if (b.getX() == x &amp;&amp; b.getY() == y - 32) {</span>
+<span class="nc" id="L108">                explosion[4].reset();</span>
+<span class="nc" id="L109">                b.remove();</span>
+<span class="nc" id="L110">                b.broke();</span>
+<span class="nc" id="L111">                hasUp = true;</span>
+<span class="nc bnc" id="L112" title="All 4 branches missed.">            } else if (b.getX() == x &amp;&amp; b.getY() == y + 32) {</span>
+<span class="nc" id="L113">                explosion[1].reset();</span>
+<span class="nc" id="L114">                b.remove();</span>
+<span class="nc" id="L115">                b.broke();</span>
+<span class="nc" id="L116">                hasDown = true;</span>
+<span class="nc bnc" id="L117" title="All 4 branches missed.">            } else if (b.getX() == x - 64 &amp;&amp; b.getY() == y) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">                for (Broken b2 : level.getBroken()) {</span>
+<span class="nc bnc" id="L119" title="All 4 branches missed.">                    if (b.getX() + 32 == b2.getX() &amp;&amp; b.getY() == b2.getY()) {</span>
+<span class="nc" id="L120">                        hasNext = true;</span>
+                    }
+<span class="nc" id="L122">                }</span>
+<span class="nc bnc" id="L123" title="All 4 branches missed.">                if (!hasLeft &amp;&amp; !hasNext) {</span>
+<span class="nc" id="L124">                    b.remove();</span>
+<span class="nc" id="L125">                    b.broke();</span>
+                }
+<span class="nc bnc" id="L127" title="All 4 branches missed.">            } else if (b.getX() == x + 64 &amp;&amp; b.getY() == y) {</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">                if (!hasRight) {</span>
+<span class="nc" id="L129">                    b.remove();</span>
+<span class="nc" id="L130">                    b.broke();</span>
+                }
+<span class="nc bnc" id="L132" title="All 4 branches missed.">            } else if (b.getX() == x &amp;&amp; b.getY() == y - 64) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">                for (Broken b2 : level.getBroken()) {</span>
+<span class="nc bnc" id="L134" title="All 4 branches missed.">                    if (b.getX() == b2.getX() &amp;&amp; b.getY() + 32 == b2.getY()) {</span>
+<span class="nc" id="L135">                        hasNext = true;</span>
+                    }
+<span class="nc" id="L137">                }</span>
+<span class="nc bnc" id="L138" title="All 4 branches missed.">                if (!hasUp &amp;&amp; !hasNext) {</span>
+<span class="nc" id="L139">                    b.remove();</span>
+<span class="nc" id="L140">                    b.broke();</span>
+                }
+<span class="nc bnc" id="L142" title="All 4 branches missed.">            } else if (b.getX() == x &amp;&amp; b.getY() == y + 64) {</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">                if (!hasDown) {</span>
+<span class="nc" id="L144">                    b.remove();</span>
+<span class="nc" id="L145">                    b.broke();</span>
+                }
+            } 
+<span class="nc" id="L148">        }</span>
+
+<span class="nc" id="L150">        int dis = 11;</span>
+<span class="nc bnc" id="L151" title="All 10 branches missed.">        if ((((redEnemy.getX() &gt;= x - 32 &amp;&amp; redEnemy.getX() &lt;= x) || (redEnemy.getX() &lt;= x + 32 &amp;&amp; redEnemy.getX() &gt;= x)) &amp;&amp; redEnemy.getY() + dis == y) ||</span>
+<span class="nc bnc" id="L152" title="All 10 branches missed.">                (redEnemy.getX() == x &amp;&amp; ((redEnemy.getY() + dis &lt;= y + 32 &amp;&amp; redEnemy.getY() + dis &gt;= y) || (redEnemy.getY() + dis &gt;= y - 32 &amp;&amp; redEnemy.getY() + dis &lt;= y)))) {</span>
+<span class="nc" id="L153">                    redEnemy.die();</span>
+<span class="nc bnc" id="L154" title="All 6 branches missed.">        } else if (redEnemy.getX() == x - 64 &amp;&amp; redEnemy.getY() + dis == y &amp;&amp; !hasLeft) {</span>
+<span class="nc" id="L155">            redEnemy.die();</span>
+<span class="nc bnc" id="L156" title="All 6 branches missed.">        } else if (redEnemy.getX() == x + 64 &amp;&amp; redEnemy.getY() + dis == y &amp;&amp; !hasRight) {</span>
+<span class="nc" id="L157">            redEnemy.die();</span>
+<span class="nc bnc" id="L158" title="All 6 branches missed.">        } else if (redEnemy.getX() == x &amp;&amp; redEnemy.getY() + dis == y + 64 &amp;&amp; !hasDown) {</span>
+<span class="nc" id="L159">            redEnemy.die();</span>
+<span class="nc bnc" id="L160" title="All 6 branches missed.">        } else if (redEnemy.getX() == x &amp;&amp; redEnemy.getY() + dis == y - 64 &amp;&amp; !hasUp) {</span>
+<span class="nc" id="L161">            redEnemy.die();</span>
+        }
+<span class="nc bnc" id="L163" title="All 10 branches missed.">        if ((((yellowEnemy.getX() &gt;= x - 32 &amp;&amp; yellowEnemy.getX() &lt;= x) || (yellowEnemy.getX() &lt;= x + 32 &amp;&amp; yellowEnemy.getX() &gt;= x)) &amp;&amp; yellowEnemy.getY() + dis == y) ||</span>
+<span class="nc bnc" id="L164" title="All 10 branches missed.">                (yellowEnemy.getX() == x &amp;&amp; ((yellowEnemy.getY() + dis &lt;= y + 32 &amp;&amp; yellowEnemy.getY() + dis &gt;= y) || (yellowEnemy.getY() + dis &gt;= y - 32 &amp;&amp; yellowEnemy.getY() + dis &lt;= y)))) {</span>
+<span class="nc" id="L165">                    yellowEnemy.die();</span>
+<span class="nc bnc" id="L166" title="All 6 branches missed.">        } else if (yellowEnemy.getX() == x - 64 &amp;&amp; yellowEnemy.getY() + dis == y &amp;&amp; !hasLeft) {</span>
+<span class="nc" id="L167">            yellowEnemy.die();</span>
+<span class="nc bnc" id="L168" title="All 6 branches missed.">        } else if (yellowEnemy.getX() == x + 64 &amp;&amp; yellowEnemy.getY() + dis == y &amp;&amp; !hasRight) {</span>
+<span class="nc" id="L169">            yellowEnemy.die();</span>
+<span class="nc bnc" id="L170" title="All 6 branches missed.">        } else if (yellowEnemy.getX() == x &amp;&amp; yellowEnemy.getY() + dis == y + 64 &amp;&amp; !hasDown) {</span>
+<span class="nc" id="L171">            yellowEnemy.die();</span>
+<span class="nc bnc" id="L172" title="All 6 branches missed.">        } else if (yellowEnemy.getX() == x &amp;&amp; yellowEnemy.getY() + dis == y - 64 &amp;&amp; !hasUp) {</span>
+<span class="nc" id="L173">            yellowEnemy.die();</span>
+        }
+<span class="nc bnc" id="L175" title="All 10 branches missed.">        if ((((bombGuy.getX() &gt;= x - 32 &amp;&amp; bombGuy.getX() &lt;= x) || (bombGuy.getX() &lt;= x + 32 &amp;&amp; bombGuy.getX() &gt;= x)) &amp;&amp; bombGuy.getY() + dis == y) ||</span>
+<span class="nc bnc" id="L176" title="All 10 branches missed.">                (bombGuy.getX() == x &amp;&amp; ((bombGuy.getY() + dis &lt;= y + 32 &amp;&amp; bombGuy.getY() + dis &gt;= y) || (bombGuy.getY() + dis &gt;= y - 32 &amp;&amp; bombGuy.getY() + dis &lt;= y)))) {</span>
+<span class="nc" id="L177">                    App.lostLive(bombGuy, redEnemy, yellowEnemy); </span>
+<span class="nc bnc" id="L178" title="All 6 branches missed.">        } else if (bombGuy.getX() == x - 64 &amp;&amp; bombGuy.getY() + dis == y &amp;&amp; !hasLeft) {</span>
+<span class="nc" id="L179">            App.lostLive(bombGuy, redEnemy, yellowEnemy); </span>
+<span class="nc bnc" id="L180" title="All 6 branches missed.">        } else if (bombGuy.getX() == x + 64 &amp;&amp; bombGuy.getY() + dis == y &amp;&amp; !hasRight) {</span>
+<span class="nc" id="L181">            App.lostLive(bombGuy, redEnemy, yellowEnemy); </span>
+<span class="nc bnc" id="L182" title="All 6 branches missed.">        } else if (bombGuy.getX() == x &amp;&amp; bombGuy.getY() + dis == y + 64 &amp;&amp; !hasDown) {</span>
+<span class="nc" id="L183">            App.lostLive(bombGuy, redEnemy, yellowEnemy); </span>
+<span class="nc bnc" id="L184" title="All 6 branches missed.">        } else if (bombGuy.getX() == x &amp;&amp; bombGuy.getY() + dis == y - 64 &amp;&amp; !hasUp) {</span>
+<span class="nc" id="L185">            App.lostLive(bombGuy, redEnemy, yellowEnemy); </span>
+        }
+
+<span class="nc" id="L188">        isExplosion = true;</span>
+    
+<span class="nc" id="L190">    } </span>
+    
+    /**
+     * Remove the explosion after 0.5s
+     * @param explosion the explosion list
+     */
+    public static void checkExplosion(Explosion[] explosion) {
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">        if (isExplosion) {</span>
+<span class="nc" id="L198">            explosionTimer++;</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">            if (explosionTimer &gt; App.RESET_SECONDS_BETWEEN_FRAME * App.FPS) {</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">                for (Explosion e : explosion) {</span>
+<span class="nc" id="L201">                    e.reset();</span>
+                }
+<span class="nc" id="L203">                isExplosion = false;</span>
+<span class="nc" id="L204">                explosionTimer = 0;</span>
+            }   
+        }
+<span class="fc" id="L207">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

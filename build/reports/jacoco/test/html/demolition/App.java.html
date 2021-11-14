@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.PApplet;
+import processing.core.PFont;
+import processing.data.JSONObject;
+import processing.data.JSONArray;
+
+public class App extends PApplet {
+    /**
+     * The width of the window
+     */
+    public static final int WIDTH = 480;
+
+    /**
+     * The height of the window
+     */
+    public static final int HEIGHT = 480;
+
+    /**
+     * The FPS of the App
+     */
+    public static final int FPS = 60;
+
+    /**
+     * Every 0.2s change the sprite of characters
+     */
+    public static final double SECONDS_BETWEEN_FRAME = 0.2;
+
+    /**
+     * Every 0.25s change the sprite of the bomb
+     */
+    public static final double BOMB_SECONDS_BETWEEN_FRAME = 0.25;
+
+    /**
+     * Explosion remain for 0.5s
+     */
+    public static final double RESET_SECONDS_BETWEEN_FRAME = 0.5;
+
+    private static Level[] levels;
+    private static Level level;
+    private static PlayerIcon playerIcon;
+    private static int levelIndex;
+    private static int bombIndex;
+    private static Bomb bomb;
+    private BombGuy bombGuy;
+    private RedEnemy redEnemy;
+    private YellowEnemy yellowEnemy;
+    private Explosion[] explosion;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private ClockIcon clockIcon;
+    private WinScreen winScreen;
+    private GameOver gameOver;
+    private PFont pFont;
+    private String font;
+    private int levelOneTime;
+    private int levelTwoTime;
+    private int gameTime;
+    private int lives;
+    private String levelOnePath;
+    private String levelTwoPath;
+    private String jsonPath;
+    private int characterIndex;
+    private int characterTimer;
+    private int bombTimer;
+    private boolean change;
+    private boolean win;
+
+    /**
+     * Constructor for the App, initialize some game objects
+     */
+<span class="fc" id="L72">    public App() { </span>
+<span class="fc" id="L73">        bomb = new Bomb(-1000, -1000);</span>
+<span class="fc" id="L74">        playerIcon = new PlayerIcon(160, 20);</span>
+<span class="fc" id="L75">        clockIcon = new ClockIcon(288, 20);</span>
+<span class="fc" id="L76">        winScreen = new WinScreen(160, 224);</span>
+<span class="fc" id="L77">        gameOver = new GameOver(160, 224);</span>
+<span class="fc" id="L78">        explosion = new Explosion[9];</span>
+<span class="fc" id="L79">        font = &quot;PressStart2P-Regular.ttf&quot;;</span>
+<span class="fc" id="L80">        levelIndex = 0;</span>
+<span class="fc" id="L81">        bombIndex = 0;</span>
+<span class="fc" id="L82">        characterIndex = 0;</span>
+<span class="fc" id="L83">        bombTimer = 0;</span>
+<span class="fc" id="L84">        characterTimer = 0;</span>
+<span class="fc" id="L85">        change = false;</span>
+<span class="fc" id="L86">        win = false;</span>
+<span class="fc" id="L87">        jsonPath = &quot;config.json&quot;;</span>
+<span class="fc" id="L88">    }</span>
+
+    /**
+     * Get the current level
+     * @return current level
+     */
+    public static Level getLevel() {
+<span class="fc" id="L95">        return level;</span>
+    }
+
+    /**
+     * Set the size of the window
+     */
+    public void settings() {
+<span class="fc" id="L102">        size(WIDTH, HEIGHT);</span>
+<span class="fc" id="L103">    }</span>
+
+    /**
+     * Set the config file path
+     * @param path the config file path
+     */
+    public void setConfig(String path) {
+<span class="fc" id="L110">        jsonPath = path;</span>
+<span class="fc" id="L111">    }</span>
+    
+    /**
+     * Load the configuration of the App
+     */
+    public void loadConfig() {
+<span class="fc" id="L117">        jsonObject = this.loadJSONObject(jsonPath);</span>
+<span class="fc" id="L118">        lives = jsonObject.getInt(&quot;lives&quot;);</span>
+<span class="fc" id="L119">        playerIcon.setLives(lives);</span>
+<span class="fc" id="L120">        jsonArray = jsonObject.getJSONArray(&quot;levels&quot;);</span>
+<span class="fc" id="L121">        jsonObject = jsonArray.getJSONObject(0);</span>
+<span class="fc" id="L122">        levelOnePath = jsonObject.getString(&quot;path&quot;);</span>
+<span class="fc" id="L123">        levelOneTime = jsonObject.getInt(&quot;time&quot;);</span>
+<span class="fc" id="L124">        jsonObject = jsonArray.getJSONObject(1);</span>
+<span class="fc" id="L125">        levelTwoPath = jsonObject.getString(&quot;path&quot;);</span>
+<span class="fc" id="L126">        levelTwoTime = jsonObject.getInt(&quot;time&quot;);</span>
+<span class="fc" id="L127">    }</span>
+
+    /**
+     * Load all the images of game objects
+     * initialize the remaining game objects
+     */
+    public void setup() {
+        // set the frameRate
+<span class="fc" id="L135">        frameRate(FPS);</span>
+        // set the font style
+<span class="fc" id="L137">        pFont = this.createFont(font, 20);</span>
+<span class="fc" id="L138">        this.textFont(pFont);</span>
+        // load the configuration
+<span class="fc" id="L140">        this.loadConfig();</span>
+        // set the gameTime
+<span class="fc" id="L142">        gameTime = levelOneTime;</span>
+<span class="fc" id="L143">        clockIcon.setTime(gameTime);</span>
+        // set the total levels
+<span class="fc" id="L145">        levels = new Level[lives * 2];</span>
+
+        // generate the levelOne map
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        for (int i = 0; i &lt; lives; i++) {</span>
+<span class="fc" id="L149">            levels[i] = new Level();</span>
+<span class="fc" id="L150">            levels[i].readMap(levelOnePath);</span>
+<span class="fc" id="L151">            levels[i].generateMap(levels[i].getMap());</span>
+        }
+        // generate the levelTwo map
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        for (int i = lives; i &lt; levels.length; i++) {</span>
+<span class="fc" id="L155">            levels[i] = new Level();</span>
+<span class="fc" id="L156">            levels[i].readMap(levelTwoPath);</span>
+<span class="fc" id="L157">            levels[i].generateMap(levels[i].getMap());</span>
+        }
+
+        // load the images of levels 
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        for (int i = 0; i &lt; levels.length; i++) {</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">            for (EmptyTile e : levels[i].getEmptyTile()) {</span>
+<span class="fc" id="L163">                e.setSprite(this.loadImage(&quot;src/main/resources/empty/empty.png&quot;));</span>
+<span class="fc" id="L164">            }</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">            for (SolidWall s : levels[i].getSolidWall()) {</span>
+<span class="fc" id="L166">                s.setSprite(this.loadImage(&quot;src/main/resources/wall/solid.png&quot;));</span>
+<span class="fc" id="L167">            }</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">            for (Broken b : levels[i].getBroken()) {</span>
+<span class="fc" id="L169">                b.setSprite(this.loadImage(&quot;src/main/resources/broken/broken.png&quot;));</span>
+<span class="fc" id="L170">            }</span>
+<span class="fc" id="L171">            levels[i].getGoal().setSprite(this.loadImage(&quot;src/main/resources/goal/goal.png&quot;)); </span>
+        }
+
+        // load the image of explosion
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        for (int i = 0; i &lt; explosion.length; i++) {</span>
+<span class="fc" id="L176">            explosion[i] = new Explosion(-1000, -1000);</span>
+        }
+<span class="fc" id="L178">        explosion[0].setSprite(this.loadImage(&quot;src/main/resources/explosion/centre.png&quot;));</span>
+<span class="fc" id="L179">        explosion[1].setSprite(this.loadImage(&quot;src/main/resources/explosion/end_bottom.png&quot;));</span>
+<span class="fc" id="L180">        explosion[2].setSprite(this.loadImage(&quot;src/main/resources/explosion/end_left.png&quot;));</span>
+<span class="fc" id="L181">        explosion[3].setSprite(this.loadImage(&quot;src/main/resources/explosion/end_right.png&quot;));</span>
+<span class="fc" id="L182">        explosion[4].setSprite(this.loadImage(&quot;src/main/resources/explosion/end_top.png&quot;));</span>
+<span class="fc" id="L183">        explosion[5].setSprite(this.loadImage(&quot;src/main/resources/explosion/horizontal.png&quot;));</span>
+<span class="fc" id="L184">        explosion[6].setSprite(this.loadImage(&quot;src/main/resources/explosion/horizontal.png&quot;));</span>
+<span class="fc" id="L185">        explosion[7].setSprite(this.loadImage(&quot;src/main/resources/explosion/vertical.png&quot;));</span>
+<span class="fc" id="L186">        explosion[8].setSprite(this.loadImage(&quot;src/main/resources/explosion/vertical.png&quot;));</span>
+        
+        // initialize the remaining game objects
+<span class="fc" id="L189">        level = levels[levelIndex];</span>
+<span class="fc" id="L190">        bombGuy = new BombGuy(level.getPlayerX(), level.getPlayerY());</span>
+<span class="fc" id="L191">        bombGuy.setInitial(level.getPlayerX(), level.getPlayerY());</span>
+<span class="fc" id="L192">        redEnemy = new RedEnemy(level.getRedX(), level.getRedY());</span>
+<span class="fc" id="L193">        yellowEnemy = new YellowEnemy(level.getYellowX(), level.getYellowY());</span>
+<span class="fc" id="L194">        bombGuy.setSprite(this.loadImage(&quot;src/main/resources/player/player1.png&quot;));</span>
+<span class="fc" id="L195">        redEnemy.setSprite(this.loadImage(&quot;src/main/resources/red_enemy/red_down1.png&quot;));</span>
+<span class="fc" id="L196">        yellowEnemy.setSprite(this.loadImage(&quot;src/main/resources/yellow_enemy/yellow_down1.png&quot;));</span>
+<span class="fc" id="L197">        bomb.setSprite(this.loadImage(&quot;src/main/resources/bomb/bomb.png&quot;));</span>
+<span class="fc" id="L198">        playerIcon.setSprite(this.loadImage(&quot;src/main/resources/icons/player.png&quot;));</span>
+<span class="fc" id="L199">        clockIcon.setSprite(this.loadImage(&quot;src/main/resources/icons/clock.png&quot;));</span>
+<span class="fc" id="L200">    }</span>
+
+    /**
+     * Draw the images every frame
+     */
+    public void draw() {
+<span class="fc" id="L206">        background(255, 127, 36);</span>
+        // check whether bombGuy has reached the goal
+<span class="pc bpc" id="L208" title="5 of 6 branches missed.">        if (bombGuy.getX() == level.getGoal().getX() &amp;&amp; bombGuy.getY() + 11 == level.getGoal().getY() &amp;&amp; !change) {</span>
+<span class="nc" id="L209">            change = true; // levelOne : false, levelTwo : true</span>
+            // change level and initialize the game object's position
+<span class="nc" id="L211">            levelIndex = lives; </span>
+<span class="nc" id="L212">            level = levels[levelIndex];</span>
+<span class="nc" id="L213">            bombGuy.setInitial(level.getPlayerX(), level.getPlayerY());</span>
+<span class="nc" id="L214">            redEnemy.setInitial(level.getRedX(), level.getRedY());</span>
+<span class="nc" id="L215">            yellowEnemy.setInitial(level.getYellowX(), level.getYellowY());</span>
+<span class="nc" id="L216">            bombGuy.reset();</span>
+<span class="nc" id="L217">            redEnemy.reset();</span>
+<span class="nc" id="L218">            yellowEnemy.reset();</span>
+<span class="nc" id="L219">            clockIcon.setTime(levelTwoTime);</span>
+        }
+
+        // check whether bombGuy has reached the final goal
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">        if (change) {</span>
+<span class="nc" id="L224">            level = levels[levelIndex];</span>
+<span class="nc bnc" id="L225" title="All 4 branches missed.">            if (bombGuy.getX() == level.getGoal().getX() &amp;&amp; bombGuy.getY() + 11 == level.getGoal().getY()) {</span>
+<span class="nc" id="L226">                this.text(&quot;YOU WIN&quot;, winScreen.getX(), winScreen.getY());</span>
+<span class="nc" id="L227">                win = true;</span>
+            }
+        }
+        // draw the game objects if it is not game over
+<span class="pc bpc" id="L231" title="3 of 6 branches missed.">        if (playerIcon.getLives() != 0 &amp;&amp; clockIcon.getTime() != 0 &amp;&amp; !win) {</span>
+            // draw the UI
+<span class="fc" id="L233">            this.text(&quot;&quot; + playerIcon.getLives(), 200, 45);</span>
+<span class="fc" id="L234">            this.text(clockIcon.getTime() + &quot;S&quot;, 325, 45);</span>
+<span class="fc" id="L235">            playerIcon.draw(this);</span>
+<span class="fc" id="L236">            clockIcon.tick();</span>
+<span class="fc" id="L237">            clockIcon.draw(this);</span>
+            // draw the map
+<span class="fc bfc" id="L239" title="All 2 branches covered.">            for (EmptyTile e : level.getEmptyTile()) {</span>
+<span class="fc" id="L240">                e.draw(this);</span>
+<span class="fc" id="L241">            }</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">            for (SolidWall s : level.getSolidWall()) {</span>
+<span class="fc" id="L243">                s.draw(this);</span>
+<span class="fc" id="L244">            }</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">            for (Broken b : level.getBroken()) {</span>
+<span class="fc" id="L246">                b.draw(this);</span>
+<span class="fc" id="L247">            }</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">            for (Explosion e : explosion) {</span>
+<span class="fc" id="L249">                e.draw(this);</span>
+            } 
+<span class="fc" id="L251">            level.getGoal().draw(this);</span>
+
+            // draw the character
+<span class="fc" id="L254">            bomb.draw(this);</span>
+<span class="fc" id="L255">            bombGuy.tick();</span>
+<span class="fc" id="L256">            bombGuy.draw(this);</span>
+<span class="fc" id="L257">            redEnemy.tick();</span>
+<span class="fc" id="L258">            redEnemy.draw(this);</span>
+<span class="fc" id="L259">            yellowEnemy.tick();</span>
+<span class="fc" id="L260">            yellowEnemy.draw(this);</span>
+        }
+
+        // draw the animations of characters 
+<span class="fc" id="L264">        characterTimer++;</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        if (characterTimer &gt; SECONDS_BETWEEN_FRAME * App.FPS) {</span>
+<span class="pc bpc" id="L266" title="1 of 2 branches missed.">            if (bombGuy.getMoveDown()) {</span>
+<span class="fc" id="L267">                bombGuy.setSprite(this.loadImage(&quot;src/main/resources/player/player&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">            } else if (bombGuy.getMoveUp()) {</span>
+<span class="nc" id="L269">                bombGuy.setSprite(this.loadImage(&quot;src/main/resources/player/player_up&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">            } else if (bombGuy.getMoveLeft()) {</span>
+<span class="nc" id="L271">                bombGuy.setSprite(this.loadImage(&quot;src/main/resources/player/player_left&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">            } else if (bombGuy.getMoveRight()) {</span>
+<span class="nc" id="L273">                bombGuy.setSprite(this.loadImage(&quot;src/main/resources/player/player_right&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));    </span>
+            }
+            
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">            if (redEnemy.getMove() == 0) {</span>
+<span class="nc" id="L277">                redEnemy.setSprite(this.loadImage(&quot;src/main/resources/red_enemy/red_up&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">            } else if (redEnemy.getMove() == 1) {</span>
+<span class="nc" id="L279">                redEnemy.setSprite(this.loadImage(&quot;src/main/resources/red_enemy/red_right&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">            } else if (redEnemy.getMove() == 2) {</span>
+<span class="fc" id="L281">                redEnemy.setSprite(this.loadImage(&quot;src/main/resources/red_enemy/red_down&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">            } else if (redEnemy.getMove() == 3) {</span>
+<span class="fc" id="L283">                redEnemy.setSprite(this.loadImage(&quot;src/main/resources/red_enemy/red_left&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+            }
+            
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">            if (yellowEnemy.getMove() % 4 == 0) {</span>
+<span class="fc" id="L287">                yellowEnemy.setSprite(this.loadImage(&quot;src/main/resources/yellow_enemy/yellow_up&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">            } else if (yellowEnemy.getMove() % 4  == 1) {</span>
+<span class="nc" id="L289">                yellowEnemy.setSprite(this.loadImage(&quot;src/main/resources/yellow_enemy/yellow_right&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">            } else if (yellowEnemy.getMove() % 4  == 2) {</span>
+<span class="nc" id="L291">                yellowEnemy.setSprite(this.loadImage(&quot;src/main/resources/yellow_enemy/yellow_down&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+<span class="nc bnc" id="L292" title="All 2 branches missed.">            } else if (yellowEnemy.getMove() % 4  == 3) {</span>
+<span class="nc" id="L293">                yellowEnemy.setSprite(this.loadImage(&quot;src/main/resources/yellow_enemy/yellow_left&quot; + (characterIndex % 4 + 1) + &quot;.png&quot;));</span>
+            }
+<span class="fc" id="L295">            characterTimer = 0;</span>
+<span class="fc" id="L296">            characterIndex++;</span>
+        }
+
+        // place a bomb
+<span class="pc bpc" id="L300" title="1 of 4 branches missed.">        if (bombGuy.getSpace() &amp;&amp; bombGuy.getCanBomb()) {</span>
+<span class="fc" id="L301">            int x = bombGuy.getX();</span>
+<span class="fc" id="L302">            int y = bombGuy.getY();</span>
+<span class="fc" id="L303">            bomb.setCoordinate(x, y + 11);</span>
+<span class="fc" id="L304">            bombGuy.setCanBomb(false);</span>
+<span class="fc" id="L305">            bombGuy.setSpace(false);</span>
+        }
+        // draw the animations of the bomb
+<span class="fc bfc" id="L308" title="All 2 branches covered.">        if (!bombGuy.getCanBomb()) {</span>
+<span class="fc" id="L309">            bombGuy.setSpace(false);</span>
+<span class="fc" id="L310">            bombTimer++;</span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">            if (bombTimer &gt; BOMB_SECONDS_BETWEEN_FRAME * App.FPS) {</span>
+<span class="fc" id="L312">                bomb.setSprite(this.loadImage(&quot;src/main/resources/bomb/bomb&quot; + (bombIndex + 1) + &quot;.png&quot;));</span>
+<span class="fc" id="L313">                bombIndex++;</span>
+<span class="fc" id="L314">                bombTimer = 0;</span>
+            }
+        }
+        // draw the animations of the explosion
+<span class="pc bpc" id="L318" title="1 of 2 branches missed.">        if (bombIndex == 8) {</span>
+<span class="nc" id="L319">            Explosion.explore(bomb, explosion, level, bombGuy, yellowEnemy, redEnemy);</span>
+<span class="nc" id="L320">            bombIndex = 0;</span>
+        }
+
+        // check whether bombGuy lost lives and the broken wall can be broken
+<span class="fc" id="L324">        lostLive(bombGuy, redEnemy, yellowEnemy);</span>
+<span class="fc" id="L325">        Explosion.checkExplosion(explosion);</span>
+        // check whether it's game over
+<span class="pc bpc" id="L327" title="4 of 6 branches missed.">        if ((playerIcon.getLives() == 0 || clockIcon.getTime() == 0) &amp;&amp; !win) {</span>
+<span class="nc" id="L328">            this.text(&quot;GAME OVER&quot;, gameOver.getX(), gameOver.getY());</span>
+        }
+<span class="fc" id="L330">    }</span>
+
+    /**
+     * Check whether bombGuy lost a live
+     * @param bombGuy the bombGuy
+     * @param redEnemy the redEnemy
+     * @param yellowEnemy the yellowEnemy
+     */
+    public static void lostLive(BombGuy bombGuy, RedEnemy redEnemy, YellowEnemy yellowEnemy) {
+        // lives must &gt; 0
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">        if (playerIcon.getLives() &gt; 0) {</span>
+            // check whether bombGuy collides with enemy or the bomb is going to explore
+<span class="pc bpc" id="L342" title="3 of 4 branches missed.">            if ((bombGuy.getX() == redEnemy.getX() &amp;&amp; bombGuy.getY() == redEnemy.getY()) || </span>
+<span class="pc bpc" id="L343" title="4 of 6 branches missed.">                    (bombGuy.getX() == yellowEnemy.getX() &amp;&amp; bombGuy.getY() == yellowEnemy.getY()) ||</span>
+                        bombIndex == 8) {
+                // reset the game object
+<span class="nc" id="L346">                bombGuy.reset();</span>
+<span class="nc" id="L347">                redEnemy.reset();</span>
+<span class="nc" id="L348">                yellowEnemy.reset();</span>
+<span class="nc" id="L349">                bomb.reset();</span>
+<span class="nc" id="L350">                playerIcon.reset();</span>
+                // reload the new map
+<span class="nc bnc" id="L352" title="All 2 branches missed.">                if (levelIndex != levels.length - 1) </span>
+<span class="nc" id="L353">                    levelIndex++;</span>
+<span class="nc" id="L354">                level = levels[levelIndex];</span>
+            } 
+        }
+<span class="fc" id="L357">    }</span>
+
+    /**
+     * Update the keyPress of player
+     */
+    public void keyPressed() {
+<span class="pc bpc" id="L363" title="1 of 2 branches missed.">        if (this.bombGuy.getRelease()) {</span>
+<span class="pc bpc" id="L364" title="1 of 2 branches missed.">            if (this.keyCode == 37) {</span>
+<span class="nc" id="L365">                this.bombGuy.pressLeft();</span>
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">            } else if (this.keyCode == 39) {</span>
+<span class="nc" id="L367">                this.bombGuy.pressRight();</span>
+<span class="pc bpc" id="L368" title="1 of 2 branches missed.">            } else if (this.keyCode == 38) {</span>
+<span class="nc" id="L369">                this.bombGuy.pressUp();</span>
+<span class="pc bpc" id="L370" title="1 of 2 branches missed.">            } else if (this.keyCode == 40) {</span>
+<span class="nc" id="L371">                this.bombGuy.pressDown();</span>
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">            } else if (this.keyCode == 32) {</span>
+<span class="fc" id="L373">                this.bombGuy.pressSpace();</span>
+            }
+        }
+<span class="fc" id="L376">    }</span>
+
+    /**
+     * Release the key
+     */
+    public void keyReleased() {
+<span class="fc" id="L382">        this.bombGuy.setRelease(true);</span>
+<span class="fc" id="L383">    }</span>
+    
+    public static void main(String[] args) {
+<span class="nc" id="L386">        PApplet.main(&quot;demolition.App&quot;);</span>
+<span class="nc" id="L387">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BombGuy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">BombGuy.java</span></div><h1>BombGuy.java</h1><pre class="source lang-java linenums">package demolition;
+
+public class BombGuy extends GameObject {
+
+    private boolean moveLeft;
+    private boolean moveUp;
+    private boolean moveRight;
+    private boolean moveDown;
+    private boolean horizontal;
+    private boolean release;
+    private boolean move;
+    private boolean space;
+    private boolean canBomb; 
+
+    /**
+     * Constructor of a bombGuy
+     * @param x the x-coordinate of the bombGuy
+     * @param y the y-coordinate of the bombGuy
+     */
+    public BombGuy(int x, int y) {
+<span class="fc" id="L21">        super(x, y);</span>
+<span class="fc" id="L22">        moveLeft = false;</span>
+<span class="fc" id="L23">        moveUp = false;</span>
+<span class="fc" id="L24">        moveRight = false;</span>
+<span class="fc" id="L25">        moveDown = true;</span>
+<span class="fc" id="L26">        horizontal = false;</span>
+<span class="fc" id="L27">        release = true;</span>
+<span class="fc" id="L28">        move = false;</span>
+<span class="fc" id="L29">        space = false;</span>
+<span class="fc" id="L30">        canBomb = true;</span>
+<span class="fc" id="L31">    }</span>
+
+    /**
+     * Reset the bombGuy position
+     */
+    public void reset() {
+<span class="fc" id="L37">        moveDown = true;</span>
+<span class="fc" id="L38">        this.setCoordinate(initialX, initialY);</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * Check whether bombGuy moves left
+     * @return moveLeft
+     */
+    public boolean getMoveLeft() {
+<span class="fc" id="L46">        return moveLeft;</span>
+    }
+
+    /**
+     * Check whether bombGuy moves right
+     * @return moveRight
+     */
+    public boolean getMoveRight() {
+<span class="fc" id="L54">        return moveRight;</span>
+    }
+
+    /**
+     * Check whether bombGuy moves up
+     * @return moveUp
+     */
+    public boolean getMoveUp() {
+<span class="fc" id="L62">        return moveUp;</span>
+    }
+
+    /**
+     * Check whether bombGuy moves down
+     * @return moveDown
+     */
+    public boolean getMoveDown() {
+<span class="fc" id="L70">        return moveDown;</span>
+    }
+
+    /**
+     * Check whether player presses space
+     * @return space
+     */
+    public boolean getSpace() {
+<span class="fc" id="L78">        return space;</span>
+    }
+
+    /**
+     * Check whether bombGuy can bomb
+     * @return canBomb
+     */
+    public boolean getCanBomb() {
+<span class="fc" id="L86">        return canBomb;</span>
+    }
+    
+    /**
+     * Get whether the key has been released
+     * @return whether the key has been released
+     */
+    public boolean getRelease() {
+<span class="fc" id="L94">        return release;</span>
+    }
+
+    /**
+     * Reset the space
+     * @param space the state of the space
+     */
+    public void setSpace(boolean space) {
+<span class="fc" id="L102">        this.space = space;</span>
+<span class="fc" id="L103">    }</span>
+
+    /**
+     * Reset the canBomb
+     * @param bool whether bombGuy can bomb
+     */
+    public void setCanBomb(boolean bool) {
+<span class="fc" id="L110">        this.canBomb = bool;</span>
+<span class="fc" id="L111">    }</span>
+
+    /**
+     * Update the keyRelease
+     * @param bool whether key has been released
+     */
+    public void setRelease(boolean bool) {
+<span class="fc" id="L118">        release = bool;</span>
+<span class="fc" id="L119">    }</span>
+
+    /**
+     * Updates the bombGuy every frame.
+     */
+    public void tick() {
+<span class="fc" id="L125">        checkCollision();</span>
+        // If move, horizontal and canMoveLeft is true, move left by decrementing x
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (move) {</span>
+<span class="fc bfc" id="L128" title="All 4 branches covered.">            if (horizontal &amp;&amp; canMoveLeft) {</span>
+<span class="fc" id="L129">                moveLeft = true;</span>
+<span class="fc" id="L130">                moveRight = false;</span>
+<span class="fc" id="L131">                moveUp = false;</span>
+<span class="fc" id="L132">                moveDown = false;</span>
+<span class="fc" id="L133">                x -= 32;</span>
+<span class="pc bpc" id="L134" title="1 of 4 branches missed.">            } else if (horizontal &amp;&amp; canMoveRight){</span>
+                // Move right by incrementing x
+<span class="fc" id="L136">                moveLeft = false;</span>
+<span class="fc" id="L137">                moveRight = true;</span>
+<span class="fc" id="L138">                moveUp = false;</span>
+<span class="fc" id="L139">                moveDown = false;</span>
+<span class="fc" id="L140">                x += 32;</span>
+<span class="pc bpc" id="L141" title="1 of 4 branches missed.">            } else if (!horizontal &amp;&amp; canMoveUp) {</span>
+                // Move up by decrementing y
+<span class="fc" id="L143">                moveUp = true;</span>
+<span class="fc" id="L144">                moveLeft = false;</span>
+<span class="fc" id="L145">                moveRight = false;</span>
+<span class="fc" id="L146">                moveDown = false;</span>
+<span class="fc" id="L147">                y -= 32;</span>
+<span class="pc bpc" id="L148" title="2 of 4 branches missed.">            } else if (!horizontal &amp;&amp; canMoveDown) {</span>
+                // Move down by incrementing y
+<span class="fc" id="L150">                moveUp = false;</span>
+<span class="fc" id="L151">                moveDown = true;</span>
+<span class="fc" id="L152">                moveLeft = false;</span>
+<span class="fc" id="L153">                moveRight = false;</span>
+<span class="fc" id="L154">                y += 32;</span>
+            }
+<span class="fc" id="L156">            move = false;</span>
+<span class="fc" id="L157">            release = false;</span>
+        }
+<span class="fc" id="L159">    }</span>
+
+    /**
+     * Called in App when the left key is pressed.
+     */
+    public void pressLeft() {
+<span class="fc" id="L165">        horizontal = true;</span>
+<span class="fc" id="L166">        move = true;</span>
+<span class="fc" id="L167">        canMoveLeft = true;</span>
+<span class="fc" id="L168">        canMoveRight = false;</span>
+<span class="fc" id="L169">    }</span>
+
+    /**
+     * Called in App when the right key is pressed.
+     */
+    public void pressRight() {
+<span class="fc" id="L175">        horizontal = true;</span>
+<span class="fc" id="L176">        move = true;</span>
+<span class="fc" id="L177">        canMoveLeft = false;</span>
+<span class="fc" id="L178">        canMoveRight = true;</span>
+<span class="fc" id="L179">    }</span>
+
+    /**
+     * Called in App when the up key is pressed.
+     */
+    public void pressUp() {
+<span class="fc" id="L185">        horizontal = false;</span>
+<span class="fc" id="L186">        move = true;</span>
+<span class="fc" id="L187">        canMoveUp = true;</span>
+<span class="fc" id="L188">        canMoveDown = false;</span>
+<span class="fc" id="L189">    }</span>
+
+    /**
+     * Called in App when the down key is pressed.
+     */
+    public void pressDown() {
+<span class="fc" id="L195">        horizontal = false;</span>
+<span class="fc" id="L196">        move = true;</span>
+<span class="fc" id="L197">        canMoveUp = false;</span>
+<span class="fc" id="L198">        canMoveDown = true;</span>
+<span class="fc" id="L199">    }</span>
+
+    /**
+     * Called in App when the space key is pressed.
+     */
+    public void pressSpace() {
+<span class="fc" id="L205">        space = true;</span>
+<span class="fc" id="L206">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

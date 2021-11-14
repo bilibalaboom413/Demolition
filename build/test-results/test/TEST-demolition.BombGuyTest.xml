@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="demolition.BombGuyTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2021-11-05T02:15:45" hostname="LAPTOP-G2PUCDLR" time="0.033">
+  <properties/>
+  <testcase name="testGetSpace()" classname="demolition.BombGuyTest" time="0.005"/>
+  <testcase name="testSetCanBomb()" classname="demolition.BombGuyTest" time="0.002"/>
+  <testcase name="testReset()" classname="demolition.BombGuyTest" time="0.004"/>
+  <testcase name="testTick()" classname="demolition.BombGuyTest" time="0.001"/>
+  <testcase name="testSetRelease()" classname="demolition.BombGuyTest" time="0.0"/>
+  <testcase name="testPressUp()" classname="demolition.BombGuyTest" time="0.0"/>
+  <testcase name="testPressDown()" classname="demolition.BombGuyTest" time="0.0"/>
+  <testcase name="testPressLeft()" classname="demolition.BombGuyTest" time="0.0"/>
+  <testcase name="testGetCanBomb()" classname="demolition.BombGuyTest" time="0.001"/>
+  <testcase name="testPressRight()" classname="demolition.BombGuyTest" time="0.0"/>
+  <testcase name="testPressSpace()" classname="demolition.BombGuyTest" time="0.0"/>
+  <testcase name="testGetMoveUp()" classname="demolition.BombGuyTest" time="0.004"/>
+  <testcase name="testGetMoveDown()" classname="demolition.BombGuyTest" time="0.002"/>
+  <testcase name="testGetMoveLeft()" classname="demolition.BombGuyTest" time="0.001"/>
+  <testcase name="testGetRelease()" classname="demolition.BombGuyTest" time="0.001"/>
+  <testcase name="testGetMoveRight()" classname="demolition.BombGuyTest" time="0.001"/>
+  <testcase name="testSetSpace()" classname="demolition.BombGuyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
