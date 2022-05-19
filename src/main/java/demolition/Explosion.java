@@ -160,6 +160,7 @@ public class Explosion extends GameObject {
         } else if (redEnemy.getX() == x && redEnemy.getY() + dis == y - 64 && !hasUp) {
             redEnemy.die();
         }
+
         if ((((yellowEnemy.getX() >= x - 32 && yellowEnemy.getX() <= x) || (yellowEnemy.getX() <= x + 32 && yellowEnemy.getX() >= x)) && yellowEnemy.getY() + dis == y) ||
                 (yellowEnemy.getX() == x && ((yellowEnemy.getY() + dis <= y + 32 && yellowEnemy.getY() + dis >= y) || (yellowEnemy.getY() + dis >= y - 32 && yellowEnemy.getY() + dis <= y)))) {
                     yellowEnemy.die();
@@ -172,6 +173,7 @@ public class Explosion extends GameObject {
         } else if (yellowEnemy.getX() == x && yellowEnemy.getY() + dis == y - 64 && !hasUp) {
             yellowEnemy.die();
         }
+        
         if ((((bombGuy.getX() >= x - 32 && bombGuy.getX() <= x) || (bombGuy.getX() <= x + 32 && bombGuy.getX() >= x)) && bombGuy.getY() + dis == y) ||
                 (bombGuy.getX() == x && ((bombGuy.getY() + dis <= y + 32 && bombGuy.getY() + dis >= y) || (bombGuy.getY() + dis >= y - 32 && bombGuy.getY() + dis <= y)))) {
                     App.lostLive(bombGuy, redEnemy, yellowEnemy); 
