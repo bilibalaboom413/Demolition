@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="demolition.LevelTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2021-11-05T02:15:45" hostname="LAPTOP-G2PUCDLR" time="0.011">
+<testsuite name="demolition.LevelTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2022-02-21T04:33:39" hostname="dabingdeMacBook-Air.local" time="0.011">
   <properties/>
-  <testcase name="testGetYellowX()" classname="demolition.LevelTest" time="0.0"/>
-  <testcase name="testGetYellowY()" classname="demolition.LevelTest" time="0.001"/>
+  <testcase name="testGetYellowX()" classname="demolition.LevelTest" time="0.001"/>
+  <testcase name="testGetYellowY()" classname="demolition.LevelTest" time="0.0"/>
   <testcase name="testGetGoal()" classname="demolition.LevelTest" time="0.001"/>
-  <testcase name="testGetRedX()" classname="demolition.LevelTest" time="0.0"/>
+  <testcase name="testGetRedX()" classname="demolition.LevelTest" time="0.001"/>
   <testcase name="testGetRedY()" classname="demolition.LevelTest" time="0.0"/>
   <testcase name="testGetEmptyTile()" classname="demolition.LevelTest" time="0.0"/>
-  <testcase name="testGetSolidWall()" classname="demolition.LevelTest" time="0.001"/>
+  <testcase name="testGetSolidWall()" classname="demolition.LevelTest" time="0.0"/>
   <testcase name="testGetPlayerX()" classname="demolition.LevelTest" time="0.0"/>
   <testcase name="testGetPlayerY()" classname="demolition.LevelTest" time="0.0"/>
-  <testcase name="testGenerateMap()" classname="demolition.LevelTest" time="0.002"/>
-  <testcase name="testReadMap()" classname="demolition.LevelTest" time="0.001"/>
-  <testcase name="testGetBroken()" classname="demolition.LevelTest" time="0.0"/>
-  <testcase name="testGetMap()" classname="demolition.LevelTest" time="0.001"/>
+  <testcase name="testGenerateMap()" classname="demolition.LevelTest" time="0.004"/>
+  <testcase name="testReadMap()" classname="demolition.LevelTest" time="0.0"/>
+  <testcase name="testGetBroken()" classname="demolition.LevelTest" time="0.001"/>
+  <testcase name="testGetMap()" classname="demolition.LevelTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
